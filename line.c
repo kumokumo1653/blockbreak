@@ -35,6 +35,7 @@ int lineCollision(struct line line, struct ball ball){
     struct corner s = corner(1, 0, line.start, ball.r, angle(normalP(l)), angle(normalN(l)), 1.0);
     //終点の円弧
     struct corner e = corner(1, 0, line.end, ball.r, angle(normalN(l)), angle(normalN(l)), 1.0);
+
     //接線と交差しているか
     //一方を採用
     struct vector normal = mult(normalP(movement), ball.r);
@@ -45,8 +46,43 @@ int lineCollision(struct line line, struct ball ball){
     
     a = sub(ball.p, s.center);
     b = sub(ball.prevP, s.center);
-    if(outer(normal, a) * outer(normal, b) <= 0 && outer(movement, sub(s.center, ball.prevP)) * outer(movement, sub(p, ball.prevP)) <= 0)
-        return 1;
+    //交差しているか
+    if(outer(normal, a) * outer(normal, b) <= 0 && outer(movement, sub(s.center, ball.prevP)) * outer(movement, sub(p, ball.prevP)) <= 0){
+        //円弧の角度の範囲内に移動ベクトルの片方でも入っているか
+        if(angle2(normalP(l), sub(ball.p, s.center)) <= 180 || angle2(normalP(l), sub(ball.prevP, s.center)) <= 180 )
+            return 1;
+    }
+
+    //一方でも領域内にあるか
+    if(angle2(normalP(l), sub(ball.p, s.center)) <= 180 && angle2(normalP(l), sub(ball.prevP, s.center)) <= 180 ){
+        if(mag(sub(ball.p, s.center)) <= s.r || mag(sub(ball.prevP, s.center)) <= s.r){
+            return 1;
+        }
+    }
+
+    //接線と交差しているか
+    //一方を採用
+    normal = mult(normalP(movement), ball.r);
+    //成す角が鈍角ならもう一方
+    if(angle2(normal, sub(ball.p, e.center)) > 90)
+        normal = mult(normalN(movement), ball.r);
+    p = add(e.center, normal);
+    
+    a = sub(ball.p, e.center);
+    b = sub(ball.prevP, e.center);
+    //交差しているか
+    if(outer(normal, a) * outer(normal, b) <= 0 && outer(movement, sub(e.center, ball.prevP)) * outer(movement, sub(p, ball.prevP)) <= 0){
+        //円弧の角度の範囲内に移動ベクトルの片方でも入っているか
+        if(angle2(normalN(l), sub(ball.p, e.center)) <= 180 || angle2(normalN(l), sub(ball.prevP, e.center)) <= 180 )
+            return 1;
+    }
+
+    //一方でも領域内にあるか
+    if(angle2(normalN(l), sub(ball.p, e.center)) <= 180 && angle2(normalN(l), sub(ball.prevP, e.center)) <= 180 ){
+        if(mag(sub(ball.p, e.center)) <= s.r || mag(sub(ball.prevP, e.center)) <= e.r){
+            return 1;
+        }
+    }
     
     return 0;
 

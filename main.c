@@ -73,7 +73,7 @@ void Timer(int value){
 //ステージの初期化
 void Init(){
 	initField(&field, WIDTH, HEIGHT);
-	initBall(&ball, BALL_R, vector(50,200));
+	initBall(&ball, BALL_R, vector(305,200));
 }
 
 //時間経過
