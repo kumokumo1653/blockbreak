@@ -2,6 +2,7 @@
 #define VECTOR
 
 #include <math.h>
+#include <stdlib.h>
 #include <float.h>
 struct vector{
     double x;
@@ -18,6 +19,8 @@ struct vector unit(struct vector);
 struct vector normalP(struct vector);
 struct vector normalN(struct vector);
 struct vector inverse(struct vector);
+void equation(struct vector, struct vector, double*, double*, double*);
+double dist(struct vector, double, double, double);
 double angle(struct vector);
 double angle2(struct vector, struct vector);
 double inner(struct vector, struct vector);

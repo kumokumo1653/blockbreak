@@ -73,7 +73,7 @@ void Timer(int value){
 //ステージの初期化
 void Init(){
 	initField(&field, WIDTH, HEIGHT);
-	initBall(&ball, BALL_R, vector(305,200));
+	initBall(&ball, BALL_R, vector(95,200));
 }
 
 //時間経過
@@ -83,8 +83,9 @@ void Update(){
 	//時間経過
 	changeVelocity(&ball, FRAME);
 	changePosition(&ball, FRAME);
-	if(lineCollision(field.wall[0], ball))
-		printf("collision\n");
+	struct vector *temp = lineCollision(field.wall[0], ball);
+	if(temp != NULL)
+		printf("x:%lfy:%lf\n", temp -> x, temp -> y);
 
 }
 

@@ -1,5 +1,7 @@
 #ifndef LINE
 #define LINE
+#include <stdio.h>
+#include <math.h>
 #include "vector.h"
 #include "ball.h"
 #include "corner.h"
@@ -11,5 +13,5 @@ struct line{
 };
 
 struct line line(int, struct vector, struct vector, double);
-int lineCollision(struct line, struct ball);
+struct vector* lineCollision(struct line, struct ball);
 #endif

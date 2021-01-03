@@ -53,6 +53,18 @@ struct vector inverse(struct vector a){
     return temp;
 }
 
+//ax + by + c = 0
+void equation(struct vector start, struct vector end, double* a, double* b, double* c){
+    *a = end.y - start.y;
+    *b = start.x - end.x;
+    *c = start.y * end.x - start.x * end.y;
+}
+
+//ax + by + c = 0とpの距離
+double dist(struct vector p, double a, double b, double c){
+    return fabs(a * p.x + b * p.y + c) / sqrt(a * a + b * b);
+}
+
 double angle(struct vector a){
     return angle2(unitX, a);
 }
