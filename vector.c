@@ -84,3 +84,10 @@ double inner(struct vector a, struct vector b){
 double outer(struct vector a, struct vector b){
     return a.x * b.y - a.y * b.x;
 }
+
+int isZero(struct vector a){
+    if(mag(a) <= DBL_EPSILON)
+        return 1;
+    else 
+        return 0;
+}

@@ -4,7 +4,7 @@ SRCS = main.c ball.c field.c flipper.c line.c shape.c vector.c corner.c
 
 OBJS = ${SRCS:.c=.o}
 
-HEADERS = ball.h field.h flipper.h line.h shape.h vector.h corner.h
+HEADERS = line.h shape.h vector.h corner.h ball.h field.h flipper.h
 
 CC = gcc
 CCFLAGS = -Wall -I/usr/include/opengl

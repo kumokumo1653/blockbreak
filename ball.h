@@ -1,6 +1,9 @@
 #ifndef BALL
 #define BALL
 #include "vector.h"
+#include "line.h"
+
+struct line;
 struct ball{
     double r;
     struct vector p;
@@ -12,4 +15,5 @@ struct ball{
 void initBall(struct ball*, double, struct vector);
 void changeVelocity(struct ball*, double);
 void changePosition(struct ball*, double);
+void lineReflection(struct ball*, struct line , struct vector );
 #endif

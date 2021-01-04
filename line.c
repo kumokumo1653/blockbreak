@@ -11,8 +11,8 @@ struct vector* lineCollision(struct line line, struct ball ball){
 
     //片側
     struct vector n = mult(normalP(l), ball.r);
-    struct vector wallStart = vector(line.start.x + n.x, line.start.y + n.y);
-    struct vector wallEnd = vector(line.end.x + n.x, line.end.y + n.y);
+    struct vector wallStart = add(line.start, n);
+    struct vector wallEnd = add(line.end, n);
     //lineの始点とボールのベクトル
     struct vector a = sub(ball.p, wallStart);
     struct vector b = sub(ball.prevP, wallStart);
@@ -26,7 +26,6 @@ struct vector* lineCollision(struct line line, struct ball ball){
     //終点の円弧
     struct corner e = corner(1, 0, line.end, ball.r, angle(normalN(l)), angle(normalN(l)), 1.0);
 
-    val = &l;
     //移動ベクトルが円弧範囲内にある場合
     if(angle2(normalP(l), sub(ball.p, s.center)) <= M_PI && angle2(normalP(l), sub(ball.prevP, s.center)) <= M_PI ){
         if(mag(sub(ball.p, s.center)) <= s.r && mag(sub(ball.prevP, s.center)) <= s.r){
@@ -39,7 +38,9 @@ struct vector* lineCollision(struct line line, struct ball ball){
         }
     }
 
-    if(outer(l, a) * outer(l, b) <= 0 && outer(movement, wallStart) * outer(movement, wallEnd) <= 0){
+    if(outer(l, a) * outer(l, b) < 0 && outer(movement, sub(wallStart, ball.p)) * outer(movement, sub(wallEnd, ball.p)) < 0){
+        printf("prevP:%lf,%lf\n", ball.prevP.x, ball.prevP.y);
+        printf("p:%lf,%lf\n", ball.p.x, ball.p.y);
         struct vector temp;
         double alpha = (wallEnd.x - wallStart.x) * (ball.p.y - ball.prevP.y) - (ball.p.x - ball.prevP.x) * (wallEnd.y - wallStart.y);
         double beta = ((ball.p.y - ball.prevP.y) * (ball.p.x - wallStart.x) + (ball.prevP.x - ball.p.x) * (ball.p.y - wallStart.y)) / alpha;
@@ -54,7 +55,7 @@ struct vector* lineCollision(struct line line, struct ball ball){
     a = sub(ball.p, wallStart);
     b = sub(ball.prevP, wallStart);
     movement = sub(ball.p, ball.prevP);
-    if(outer(l, a) * outer(l, b) <= 0 && outer(movement, wallStart) * outer(movement, wallEnd) <= 0){
+    if(outer(l, a) * outer(l, b) < 0 && outer(movement, sub(wallStart, ball.p)) * outer(movement, sub(wallEnd, ball.p)) < 0){
         struct vector temp;
         double alpha = (wallEnd.x - wallStart.x) * (ball.p.y - ball.prevP.y) - (ball.p.x - ball.prevP.x) * (wallEnd.y - wallStart.y);
         double beta = ((ball.p.y - ball.prevP.y) * (ball.p.x - wallStart.x) + (ball.prevP.x - ball.p.x) * (ball.p.y - wallStart.y)) / alpha;
@@ -73,7 +74,7 @@ struct vector* lineCollision(struct line line, struct ball ball){
     a = sub(ball.p, s.center);
     b = sub(ball.prevP, s.center);
     //交差しているか
-    if(outer(normal, a) * outer(normal, b) <= 0 && outer(movement, sub(s.center, ball.prevP)) * outer(movement, sub(p, ball.prevP)) <= 0){
+    if(outer(normal, a) * outer(normal, b) < 0 && outer(movement, sub(s.center, ball.prevP)) * outer(movement, sub(p, ball.prevP)) < 0){
         //円弧の角度の範囲内に移動ベクトルの片方でも入っているか
         if(angle2(normalP(l), sub(ball.p, s.center)) <= M_PI || angle2(normalP(l), sub(ball.prevP, s.center)) <= M_PI ){
             double a, b, c;
@@ -109,7 +110,7 @@ struct vector* lineCollision(struct line line, struct ball ball){
     a = sub(ball.p, e.center);
     b = sub(ball.prevP, e.center);
     //交差しているか
-    if(outer(normal, a) * outer(normal, b) <= 0 && outer(movement, sub(e.center, ball.prevP)) * outer(movement, sub(p, ball.prevP)) <= 0){
+    if(outer(normal, a) * outer(normal, b) < 0 && outer(movement, sub(e.center, ball.prevP)) * outer(movement, sub(p, ball.prevP)) < 0){
         //円弧の角度の範囲内に移動ベクトルの片方でも入っているか
         if(angle2(normalN(l), sub(ball.p, e.center)) <= M_PI || angle2(normalN(l), sub(ball.prevP, e.center)) <= M_PI ){
             double a, b, c;

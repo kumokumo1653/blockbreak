@@ -5,6 +5,7 @@
 #include "vector.h"
 #include "ball.h"
 #include "corner.h"
+struct ball;
 struct line{
     int isExist;
     struct vector start;
