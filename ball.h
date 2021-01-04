@@ -1,5 +1,7 @@
 #ifndef BALL
 #define BALL
+#include <float.h>
+#include <stdlib.h>
 #include "vector.h"
 #include "line.h"
 

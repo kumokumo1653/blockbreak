@@ -74,7 +74,7 @@ void Timer(int value){
 //ステージの初期化
 void Init(){
 	initField(&field, WIDTH, HEIGHT);
-	initBall(&ball, BALL_R, vector(200,200));
+	initBall(&ball, BALL_R, vector(91,200));
 }
 
 //時間経過
@@ -86,8 +86,6 @@ void Update(){
 	if(temp != NULL){
 		printf("x:%lfy:%lf\n", temp -> x, temp -> y);
 		lineReflection(&ball, field.wall[0], *temp);
-		printf("x:%lf,y:%lf\n", ball.p.x, ball.p.y);
-		printf("vx:%lf,vy:%lf\n", ball.v.x, ball.v.y);
 		//垂直抗力によって力ゼロ
 		ball.a = zero;	
 	}else{

@@ -39,8 +39,6 @@ struct vector* lineCollision(struct line line, struct ball ball){
     }
 
     if(outer(l, a) * outer(l, b) < 0 && outer(movement, sub(wallStart, ball.p)) * outer(movement, sub(wallEnd, ball.p)) < 0){
-        printf("prevP:%lf,%lf\n", ball.prevP.x, ball.prevP.y);
-        printf("p:%lf,%lf\n", ball.p.x, ball.p.y);
         struct vector temp;
         double alpha = (wallEnd.x - wallStart.x) * (ball.p.y - ball.prevP.y) - (ball.p.x - ball.prevP.x) * (wallEnd.y - wallStart.y);
         double beta = ((ball.p.y - ball.prevP.y) * (ball.p.x - wallStart.x) + (ball.prevP.x - ball.p.x) * (ball.p.y - wallStart.y)) / alpha;
