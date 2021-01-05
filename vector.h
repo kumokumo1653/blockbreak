@@ -19,6 +19,7 @@ struct vector unit(struct vector);
 struct vector normalP(struct vector);
 struct vector normalN(struct vector);
 struct vector inverse(struct vector);
+struct vector rotate(struct vector, double);
 void equation(struct vector, struct vector, double*, double*, double*);
 double dist(struct vector, double, double, double);
 double angle(struct vector);

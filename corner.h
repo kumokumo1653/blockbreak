@@ -1,15 +1,20 @@
 #ifndef CORNER
 #define CORNER
+#include <stdio.h>
+#include <math.h>
 #include "vector.h"
+#include "ball.h"
+#include "vector.h"
+struct ball;
 struct corner{
     int isExist;
-    int isOut;
     struct vector center;
     double r;
-    double startAngle;
-    double endAngle;
+    double startAngle; // 中心を原点とした角度
+    double endAngle;    //中心を原点とした角度
     double e;
 };
 
-struct corner corner(int, int, struct vector, double, double, double, double);
+struct corner corner(int, struct vector, double, double, double, double);
+struct vector* cornerCollision(struct corner, struct ball);
 #endif

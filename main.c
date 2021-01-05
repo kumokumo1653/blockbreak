@@ -42,6 +42,7 @@ void Display(void){
 	int i;
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLineWidth(2);
+	/*
 	for(i = 0; i < WALL;i++){
 		struct vector start = convertCoordinate(field.wall[i].start);
 		struct vector end = convertCoordinate(field.wall[i].end);
@@ -50,6 +51,11 @@ void Display(void){
 			glVertex2i(end.x, end.y);
 		glEnd();
 	}
+	*/
+	for(i = 0; i < C;i++){
+		DrawCircle(convertCoordinate( field.circle[i].center), field.circle[i].r, GL_LINE_LOOP, field.circle[i].startAngle, field.circle[i].endAngle, 2.0, (GLubyte[]){255,255,255,255});
+	}
+
 	struct vector center = convertCoordinate(ball.p);
 	DrawCircle(center, ball.r, GL_POLYGON, 0, 2 * M_PI, 2.0, (GLubyte[]){255,255,255,255});
 	glFlush();
@@ -74,7 +80,7 @@ void Timer(int value){
 //ステージの初期化
 void Init(){
 	initField(&field, WIDTH, HEIGHT);
-	initBall(&ball, BALL_R, vector(91,200));
+	initBall(&ball, BALL_R, vector(100,200));
 }
 
 //時間経過
@@ -82,10 +88,10 @@ void Update(){
 	//時間経過
 	changeVelocity(&ball, FRAME);
 	changePosition(&ball, FRAME);
-	struct vector *temp = lineCollision(field.wall[0], ball);
+	struct vector *temp = cornerCollision(field.circle[0], ball);
 	if(temp != NULL){
 		printf("x:%lfy:%lf\n", temp -> x, temp -> y);
-		lineReflection(&ball, field.wall[0], *temp);
+		//lineReflection(&ball, field.wall[0], *temp);
 		//垂直抗力によって力ゼロ
 		ball.a = zero;	
 	}else{

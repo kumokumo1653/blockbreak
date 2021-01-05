@@ -53,6 +53,11 @@ struct vector inverse(struct vector a){
     return temp;
 }
 
+struct vector rotate(struct vector a, double theta){
+    struct vector temp = {a.x * cos(theta) - a.y * sin(theta), a.x * sin(theta) + a.y * cos(theta)};
+    return temp;
+}
+
 //ax + by + c = 0
 void equation(struct vector start, struct vector end, double* a, double* b, double* c){
     *a = end.y - start.y;

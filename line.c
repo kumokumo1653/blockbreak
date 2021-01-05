@@ -22,9 +22,9 @@ struct vector* lineCollision(struct line line, struct ball ball){
 
     //線分端の円弧部の当たり判定
     //始点の円弧
-    struct corner s = corner(1, 0, line.start, ball.r, angle(normalP(l)), angle(normalN(l)), 1.0);
+    struct corner s = corner(1, line.start, ball.r, angle(normalP(l)), angle(normalN(l)), 1.0);
     //終点の円弧
-    struct corner e = corner(1, 0, line.end, ball.r, angle(normalN(l)), angle(normalN(l)), 1.0);
+    struct corner e = corner(1, line.end, ball.r, angle(normalN(l)), angle(normalN(l)), 1.0);
 
     //移動ベクトルが円弧範囲内にある場合
     if(angle2(normalP(l), sub(ball.p, s.center)) <= M_PI && angle2(normalP(l), sub(ball.prevP, s.center)) <= M_PI ){
