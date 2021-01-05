@@ -18,6 +18,8 @@ void changePosition(struct ball* ball, double time){
 }
 
 //反射時の速度処理
+
+//進行ベクトルと接線、壁のベクトルのなす角が同一のとき動作未確定
 void lineReflection(struct ball* ball, struct line line, struct vector p){
     //進行ベクトル
     struct vector f = sub(p, ball->prevP);
@@ -53,7 +55,7 @@ void lineReflection(struct ball* ball, struct line line, struct vector p){
         ball -> p.x = p.x;
         ball -> p.y = p.y;
         return;
-    }else if (fabs(pow(p.x - line.start.x, 2) + pow(p.y - line.start.y, 2) - ball->r * ball->r) <= DBL_EPSILON * (fmax( fmax(1, ball->r * ball->r), pow(p.x - line.end.x, 2) + pow(p.y - line.end.y, 2)))){
+    }else if (fabs(pow(p.x - line.start.x, 2) + pow(p.y - line.start.y, 2) - ball->r * ball->r) <= DBL_EPSILON * (fmax( fmax(1, ball->r * ball->r), pow(p.x - line.start.x, 2) + pow(p.y - line.start.y, 2)))){
         //始点部の円弧
         l = vector(p.y - line.start.y, line.start.x - p.x);
         normal = normalP(l);
@@ -65,7 +67,6 @@ void lineReflection(struct ball* ball, struct line line, struct vector p){
         struct vector r = unit(add(f, mult(normal, 2 * inner(inverse(f), normal))));
 
         ball -> v = mult(r, mag(ball -> v) * line.e);
-        printf("v:%lf,%lf\n", ball -> v.x, ball -> v.y);
         if(isZero(ball->v))
             ball -> v = zero;
         //位置補正
@@ -84,7 +85,6 @@ void lineReflection(struct ball* ball, struct line line, struct vector p){
         struct vector r = unit(add(f, mult(normal, 2 * inner(inverse(f), normal))));
 
         ball -> v = mult(r, mag(ball -> v) * line.e);
-        printf("v:%lf,%lf\n", ball -> v.x, ball -> v.y);
         if(isZero(ball->v))
             ball -> v = zero;
         //位置補正
@@ -93,4 +93,77 @@ void lineReflection(struct ball* ball, struct line line, struct vector p){
         return;
     }
     printf("error\n");
+}
+
+void cornerReflection(struct ball* ball, struct corner corner, struct vector p){
+    //進行ベクトル
+    struct vector f = sub(p, ball->prevP);
+    struct vector start = add(corner.center, rotate(mult(unitX, corner.r), corner.startAngle));
+    struct vector end = add(corner.center, rotate(mult(unitX, corner.r), corner.endAngle));
+    //接線ベクトル
+    struct vector l;
+    //法線ベクトル
+    struct vector normal;
+
+    if (fabs(pow(p.x - start.x, 2) + pow(p.y - start.y, 2) - ball->r * ball->r) <= DBL_EPSILON * (fmax( fmax(1, ball->r * ball->r), pow(p.x - start.x, 2) + pow(p.y - start.y, 2)))){
+        //始点部の円弧
+        l = vector(p.y - start.y, start.x - p.x);
+        normal = normalP(l);
+        //進行ベクトル成す角が鈍角ならもう一方
+        if(angle2(normal, inverse(f)) > M_PI / 2 && angle2(inverse(f), normal) > M_PI / 2)
+            normal = normalN(l);
+        
+        //反射単位ベクトル
+        struct vector r = unit(add(f, mult(normal, 2 * inner(inverse(f), normal))));
+
+        ball -> v = mult(r, mag(ball -> v) * corner.e);
+        printf("v:%lf,%lf\n", ball -> v.x, ball -> v.y);
+        if(isZero(ball->v))
+            ball -> v = zero;
+        //位置補正
+        ball -> p.x = p.x;
+        ball -> p.y = p.y;
+        return;
+    }else if(fabs(pow(p.x - end.x, 2) + pow(p.y - end.y, 2) - ball->r * ball->r) <= DBL_EPSILON * (fmax( fmax(1, ball->r * ball->r), pow(p.x - end.x, 2) + pow(p.y - end.y, 2)))){
+        //終点部の円弧
+        l = vector(p.y - end.y, end.x - p.x);
+        normal = normalP(l);
+        //進行ベクトル成す角が鈍角ならもう一方
+        if(angle2(normal, inverse(f)) > M_PI / 2 && angle2(inverse(f), normal) > M_PI / 2)
+            normal = normalN(l);
+        
+        //反射単位ベクトル
+        struct vector r = unit(add(f, mult(normal, 2 * inner(inverse(f), normal))));
+
+        ball -> v = mult(r, mag(ball -> v) * corner.e);
+        printf("v:%lf,%lf\n", ball -> v.x, ball -> v.y);
+        if(isZero(ball->v))
+            ball -> v = zero;
+        //位置補正
+        ball -> p.x = p.x;
+        ball -> p.y = p.y;
+        printf("p:%lf,%lf\n", ball -> p.x, ball -> p.y);
+        return;
+    }else{
+        //外側か内側
+        printf("asdf\n");
+        l = vector(p.y - corner.center.y, corner.center.x - p.x);
+        normal = normalP(l);
+        //進行ベクトル成す角が鈍角ならもう一方
+        if(angle2(normal, inverse(f)) > M_PI / 2 && angle2(inverse(f), normal) > M_PI / 2)
+            normal = normalN(l);
+        
+        //反射単位ベクトル
+        struct vector r = unit(add(f, mult(normal, 2 * inner(inverse(f), normal))));
+
+        ball -> v = mult(r, mag(ball -> v) * corner.e);
+        printf("v:%lf,%lf\n", ball -> v.x, ball -> v.y);
+        if(isZero(ball->v))
+            ball -> v = zero;
+        //位置補正
+        ball -> p.x = p.x;
+        ball -> p.y = p.y;
+        return;
+    }
+
 }

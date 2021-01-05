@@ -62,11 +62,7 @@ struct vector* lineCollision(struct line line, struct ball ball){
     } 
 
     //接線と交差しているか始点側
-    //一方を採用
-    struct vector normal = mult(normalP(movement), ball.r);
-    //成す角が鈍角ならもう一方
-    if(angle2(normal, sub(ball.p, s.center)) > M_PI / 2 && angle2(sub(ball.p, s.center), normal) > M_PI / 2)
-        normal = mult(normalN(movement), ball.r);
+    struct vector normal = mult(normalization(ball.p, ball.prevP, s.center), ball.r);
     struct vector p = add(s.center, normal);
     
     a = sub(ball.p, s.center);
@@ -86,7 +82,7 @@ struct vector* lineCollision(struct line line, struct ball ball){
 
     //現在位置が領域内にあるか
     if(angle2(normalP(l), sub(ball.p, s.center)) <= M_PI){
-        if(mag(sub(ball.p, s.center)) <= s.r){
+        if(mag(sub(ball.p, s.center)) <= s.r && mag(sub(ball.prevP, s.center)) > s.r){
             double a, b, c;
             equation(ball.prevP, ball.p, &a, &b, &c);
             struct vector ch = mult(unit(normal), dist(s.center, a, b, c));
@@ -98,11 +94,7 @@ struct vector* lineCollision(struct line line, struct ball ball){
 
 
     //接線と交差しているか終点側
-    //一方を採用
-    normal = mult(normalP(movement), ball.r);
-    //成す角が鈍角ならもう一方
-    if(angle2(normal, sub(ball.p, e.center)) > M_PI / 2 && angle2(sub(ball.p, e.center), normal) > M_PI / 2)
-        normal = mult(normalN(movement), ball.r);
+    normal = mult(normalization(ball.p, ball.prevP, e.center), ball.r);
     p = add(e.center, normal);
     
     a = sub(ball.p, e.center);
@@ -122,7 +114,7 @@ struct vector* lineCollision(struct line line, struct ball ball){
 
     //現在位置が領域内にあるか
     if(angle2(normalN(l), sub(ball.p, e.center)) <= M_PI){
-        if(mag(sub(ball.p, e.center)) <= s.r){
+        if(mag(sub(ball.p, e.center)) <= s.r && mag(sub(ball.prevP, e.center)) > s.r){
             double a, b, c;
             equation(ball.prevP, ball.p, &a, &b, &c);
             struct vector ch = mult(unit(normal), dist(e.center, a, b, c));

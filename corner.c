@@ -16,10 +16,7 @@ struct vector* cornerCollision(struct corner tar, struct ball ball){
     struct vector* val;
 
     //外側
-    struct vector normal = mult(normalP(movement), out);
-    //成す角が鈍角ならもう一方
-    if(angle2(normal, sub(ball.p, tar.center)) > M_PI / 2 && angle2(sub(ball.p, tar.center), normal) > M_PI / 2)
-        normal = mult(normalN(movement), out);
+    struct vector normal = mult(normalization(ball.p, ball.prevP, tar.center), out);
     struct vector p = add(tar.center, normal);
     
     struct vector a = sub(ball.p, tar.center);
@@ -37,7 +34,7 @@ struct vector* cornerCollision(struct corner tar, struct ball ball){
     }
 
     //現在位置が領域内にあるか
-    if(mag(sub(ball.p, tar.center)) <= out){
+    if(mag(sub(ball.p, tar.center)) <= out && mag(sub(ball.prevP, tar.center)) > out){
         double a, b, c;
         equation(ball.prevP, ball.p, &a, &b, &c);
         struct vector ch = mult(unit(normal), dist(tar.center, a, b, c));
@@ -48,26 +45,23 @@ struct vector* cornerCollision(struct corner tar, struct ball ball){
     }
 
     //内側
-    normal = mult(normalP(movement), in);
-    //成す角が鈍角ならもう一方
-    if(angle2(normal, sub(ball.p, tar.center)) > M_PI / 2 && angle2(sub(ball.p, tar.center), normal) > M_PI / 2)
-        normal = mult(normalN(movement), in);
+    normal = mult(normalization(ball.p, ball.prevP, tar.center), in);
     //移動前の位置が領域内にあるか
-    if(mag(sub(ball.prevP, tar.center)) <= in){
+    if(mag(sub(ball.prevP, tar.center)) <= in && mag(sub(ball.p, tar.center)) > in){
         double a, b, c;
         equation(ball.prevP, ball.p, &a, &b, &c);
         struct vector ch = mult(unit(normal), dist(tar.center, a, b, c));
-        struct vector ha = mult(unit(inverse(movement)), sqrt(in * in - mag(ch) * mag(ch)));
+        struct vector ha = mult(unit(movement), sqrt(in * in - mag(ch) * mag(ch)));
         struct vector temp = add(tar.center, (add(ch, ha)));
         if(angle2(rotate(unitX, tar.startAngle), add(ch, ha)) <= theta)
             return val = &temp;
+        //printf("a:%lf,%lf\n",rotate(unitX, tar.startAngle).x, rotate(unitX, tar.startAngle).y);
+        //printf("b:%lf,%lf\n",add(ch, ha).x, add(ch, ha).y);
+        //printf("normal:%lf,%lf\n",normal.x, normal.y);
     }
 
     //始点円弧部
-    normal = mult(normalP(movement), ball.r);
-    //成す角が鈍角ならもう一方
-    if(angle2(normal, sub(ball.p, start)) > M_PI / 2 && angle2(sub(ball.p, start), normal) > M_PI / 2)
-        normal = mult(normalN(movement), ball.r);
+    normal = mult(normalization(ball.p, ball.prevP, start), ball.r);
     
     a = sub(ball.p, start);
     b = sub(ball.prevP, start);
@@ -83,7 +77,7 @@ struct vector* cornerCollision(struct corner tar, struct ball ball){
     }
 
     //現在位置が領域内にあるか
-    if(mag(sub(ball.p, start)) <= ball.r){
+    if(mag(sub(ball.p, start)) <= ball.r && mag(sub(ball.prevP, start)) > ball.r){
         double a, b, c;
         equation(ball.prevP, ball.p, &a, &b, &c);
         struct vector ch = mult(unit(normal), dist(start, a, b, c));
@@ -94,10 +88,7 @@ struct vector* cornerCollision(struct corner tar, struct ball ball){
     }
 
     //終点円弧
-    normal = mult(normalP(movement), ball.r);
-    //成す角が鈍角ならもう一方
-    if(angle2(normal, sub(ball.p, end)) > M_PI / 2 && angle2(sub(ball.p, end), normal) > M_PI / 2)
-        normal = mult(normalN(movement), ball.r);
+    normal = mult(normalization(ball.p, ball.prevP, end), ball.r);
     
     a = sub(ball.p, end);
     b = sub(ball.prevP, end);
@@ -113,7 +104,7 @@ struct vector* cornerCollision(struct corner tar, struct ball ball){
     }
 
     //現在位置が領域内にあるか
-    if(mag(sub(ball.p, end)) <= ball.r){
+    if(mag(sub(ball.p, end)) <= ball.r && mag(sub(ball.prevP, end)) > ball.r){
         double a, b, c;
         equation(ball.prevP, ball.p, &a, &b, &c);
         struct vector ch = mult(unit(normal), dist(end, a, b, c));

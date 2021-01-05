@@ -27,6 +27,7 @@ double angle2(struct vector, struct vector);
 double inner(struct vector, struct vector);
 double outer(struct vector, struct vector);
 
+struct vector normalization(struct vector, struct vector, struct vector);
 int isZero(struct vector);
 extern const struct vector zero;
 extern const struct vector unitX;
