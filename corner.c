@@ -29,26 +29,22 @@ struct vector* cornerCollision(struct corner tar, struct ball ball){
         double a, b, c;
         equation(ball.prevP, ball.p, &a, &b, &c);
         struct vector ch = mult(unit(normal), dist(tar.center, a, b, c));
-        struct vector ha = mult(unit(inverse(movement)), sqrt(tar.r * tar.r - mag(ch) * mag(ch)));
+        struct vector ha = mult(unit(inverse(movement)), sqrt(out * out - mag(ch) * mag(ch)));
         struct vector temp = add(tar.center, (add(ch, ha)));
         if(angle2(rotate(unitX, tar.startAngle), add(ch, ha)) <= theta)
             return val = &temp;
-        else
-            return NULL;
         
     }
 
     //現在位置が領域内にあるか
-    if(mag(sub(ball.p, tar.center)) <= tar.r){
+    if(mag(sub(ball.p, tar.center)) <= out){
         double a, b, c;
         equation(ball.prevP, ball.p, &a, &b, &c);
         struct vector ch = mult(unit(normal), dist(tar.center, a, b, c));
-        struct vector ha = mult(unit(inverse(movement)), sqrt(tar.r * tar.r - mag(ch) * mag(ch)));
+        struct vector ha = mult(unit(inverse(movement)), sqrt(out * out - mag(ch) * mag(ch)));
         struct vector temp = add(tar.center, (add(ch, ha)));
         if(angle2(rotate(unitX, tar.startAngle), add(ch, ha)) <= theta)
             return val = &temp;
-        else
-            return NULL;
     }
 
     //内側
@@ -57,16 +53,14 @@ struct vector* cornerCollision(struct corner tar, struct ball ball){
     if(angle2(normal, sub(ball.p, tar.center)) > M_PI / 2 && angle2(sub(ball.p, tar.center), normal) > M_PI / 2)
         normal = mult(normalN(movement), in);
     //移動前の位置が領域内にあるか
-    if(mag(sub(ball.prevP, tar.center)) <= tar.r){
+    if(mag(sub(ball.prevP, tar.center)) <= in){
         double a, b, c;
         equation(ball.prevP, ball.p, &a, &b, &c);
         struct vector ch = mult(unit(normal), dist(tar.center, a, b, c));
-        struct vector ha = mult(unit(inverse(movement)), sqrt(tar.r * tar.r - mag(ch) * mag(ch)));
+        struct vector ha = mult(unit(inverse(movement)), sqrt(in * in - mag(ch) * mag(ch)));
         struct vector temp = add(tar.center, (add(ch, ha)));
         if(angle2(rotate(unitX, tar.startAngle), add(ch, ha)) <= theta)
             return val = &temp;
-        else
-            return NULL;
     }
 
     //始点円弧部
@@ -86,8 +80,6 @@ struct vector* cornerCollision(struct corner tar, struct ball ball){
         struct vector temp = add(start, (add(ch, ha)));
         if(angle2(inverse(rotate(unitX, tar.startAngle)), add(ch, ha)) <= M_PI)
             return val = &temp;
-        else
-            return NULL;
     }
 
     //現在位置が領域内にあるか
@@ -99,8 +91,6 @@ struct vector* cornerCollision(struct corner tar, struct ball ball){
         struct vector temp = add(start, (add(ch, ha)));
         if(angle2(inverse(rotate(unitX, tar.startAngle)), add(ch, ha)) <= M_PI)
             return val = &temp;
-        else
-            return NULL;
     }
 
     //終点円弧
@@ -120,8 +110,6 @@ struct vector* cornerCollision(struct corner tar, struct ball ball){
         struct vector temp = add(end, (add(ch, ha)));
         if(angle2(rotate(unitX, tar.endAngle), add(ch, ha)) <= M_PI)
             return val = &temp;
-        else
-            return NULL;
     }
 
     //現在位置が領域内にあるか
@@ -133,8 +121,6 @@ struct vector* cornerCollision(struct corner tar, struct ball ball){
         struct vector temp = add(end, (add(ch, ha)));
         if(angle2(rotate(unitX, tar.endAngle), add(ch, ha)) <= M_PI)
             return val = &temp;
-        else
-            return NULL;
     }
     
     return NULL;

@@ -53,7 +53,7 @@ void Display(void){
 	}
 	*/
 	for(i = 0; i < C;i++){
-		DrawCircle(convertCoordinate( field.circle[i].center), field.circle[i].r, GL_LINE_LOOP, field.circle[i].startAngle, field.circle[i].endAngle, 2.0, (GLubyte[]){255,255,255,255});
+		DrawCircle(convertCoordinate( field.circle[i].center), field.circle[i].r, GL_LINE_STRIP, field.circle[i].startAngle, field.circle[i].endAngle, 2.0, (GLubyte[]){255,255,255,255});
 	}
 
 	struct vector center = convertCoordinate(ball.p);

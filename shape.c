@@ -13,7 +13,7 @@ void DrawCircle(struct vector center, int r, GLenum mode,double stheta, double e
         double rate = (double)i / n;
         double x = r * cos(range * rate + stheta);
         double y = r * sin(range * rate + stheta);
-        glVertex2i(center.x + x, center.y + y); // 頂点座標を指定
+        glVertex2i(center.x + x, center.y - y); // 頂点座標を指定
         
     }
     glEnd(); 
