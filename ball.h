@@ -21,4 +21,6 @@ void changeVelocity(struct ball*, double);
 void changePosition(struct ball*, double);
 void lineReflection(struct ball*, struct line , struct vector );
 void cornerReflection(struct ball*, struct corner , struct vector );
+int  isCircumference(struct vector , struct vector, double);
+
 #endif

@@ -55,7 +55,7 @@ void lineReflection(struct ball* ball, struct line line, struct vector p){
         ball -> p.x = p.x;
         ball -> p.y = p.y;
         return;
-    }else if (fabs(pow(p.x - line.start.x, 2) + pow(p.y - line.start.y, 2) - ball->r * ball->r) <= DBL_EPSILON * (fmax( fmax(1, ball->r * ball->r), pow(p.x - line.start.x, 2) + pow(p.y - line.start.y, 2)))){
+    }else if (isCircumference(p, line.start, ball->r)){
         //始点部の円弧
         l = vector(p.y - line.start.y, line.start.x - p.x);
         normal = normalP(l);
@@ -73,7 +73,7 @@ void lineReflection(struct ball* ball, struct line line, struct vector p){
         ball -> p.x = p.x;
         ball -> p.y = p.y;
         return;
-    }else if(fabs(pow(p.x - line.end.x, 2) + pow(p.y - line.end.y, 2) - ball->r * ball->r) <= DBL_EPSILON * (fmax( fmax(1, ball->r * ball->r), pow(p.x - line.end.x, 2) + pow(p.y - line.end.y, 2)))){
+    }else if(isCircumference(p, line.end, ball->r)){
         //終点部の円弧
         l = vector(p.y - line.end.y, line.end.x - p.x);
         normal = normalP(l);
@@ -105,8 +105,7 @@ void cornerReflection(struct ball* ball, struct corner corner, struct vector p){
     //法線ベクトル
     struct vector normal;
 
-    printf("p:%lf,%lf\n",p.x, p.y);
-    if (fabs(pow(p.x - start.x, 2) + pow(p.y - start.y, 2) - ball->r * ball->r) <= DBL_EPSILON * (fmax( fmax(1, ball->r * ball->r), pow(p.x - start.x, 2) + pow(p.y - start.y, 2)))){
+    if (isCircumference(p, start, ball->r)){
         //始点部の円弧
         l = vector(p.y - start.y, start.x - p.x);
         normal = normalP(l);
@@ -118,15 +117,13 @@ void cornerReflection(struct ball* ball, struct corner corner, struct vector p){
         struct vector r = unit(add(f, mult(normal, 2 * inner(inverse(f), normal))));
 
         ball -> v = mult(r, mag(ball -> v) * corner.e);
-        printf("start");
-        printf("v:%lf,%lf\n", ball -> v.x, ball -> v.y);
         if(isZero(ball->v))
             ball -> v = zero;
         //位置補正
         ball -> p.x = p.x;
         ball -> p.y = p.y;
         return;
-    }else if(fabs(pow(p.x - end.x, 2) + pow(p.y - end.y, 2) - ball->r * ball->r) <= DBL_EPSILON * (fmax( fmax(1, ball->r * ball->r), pow(p.x - end.x, 2) + pow(p.y - end.y, 2)))){
+    }else if(isCircumference(p, end, ball->r)){
         //終点部の円弧
         l = vector(p.y - end.y, end.x - p.x);
         normal = normalP(l);
@@ -138,15 +135,13 @@ void cornerReflection(struct ball* ball, struct corner corner, struct vector p){
         struct vector r = unit(add(f, mult(normal, 2 * inner(inverse(f), normal))));
 
         ball -> v = mult(r, mag(ball -> v) * corner.e);
-        printf("end");
-        printf("v:%lf,%lf\n", ball -> v.x, ball -> v.y);
         if(isZero(ball->v))
             ball -> v = zero;
         //位置補正
         ball -> p.x = p.x;
         ball -> p.y = p.y;
         return;
-    }else{
+    }else if(isCircumference(p, corner.center, corner.r + ball->r) || isCircumference(p, corner.center, corner.r - ball->r)){
         //外側か内側
         l = vector(p.y - corner.center.y, corner.center.x - p.x);
         normal = normalP(l);
@@ -157,9 +152,9 @@ void cornerReflection(struct ball* ball, struct corner corner, struct vector p){
         //反射単位ベクトル
         struct vector r = unit(add(f, mult(normal, 2 * inner(inverse(f), normal))));
 
-        ball -> v = mult(r, mag(ball -> v) * corner.e);
-        printf("inout");
+        printf("s\n");
         printf("v:%lf,%lf\n", ball -> v.x, ball -> v.y);
+        ball -> v = mult(r, mag(ball -> v) * corner.e);
         if(isZero(ball->v))
             ball -> v = zero;
         //位置補正
@@ -167,5 +162,13 @@ void cornerReflection(struct ball* ball, struct corner corner, struct vector p){
         ball -> p.y = p.y;
         return;
     }
+    printf("error\n");
+}
 
+//半径rの中心cの円の円周上にaがあるかどうか
+int  isCircumference(struct vector a, struct vector c, double r){
+
+    if(fabs(pow(a.x - c.x, 2) + pow(a.y - c.y, 2) - r * r) <= DBL_EPSILON * 5 * (fmax( fmax(1, r * r), pow(a.x - c.x, 2) + pow(a.y - c.y, 2))))
+        return 1;
+    else return 0;
 }

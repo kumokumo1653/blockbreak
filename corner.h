@@ -16,5 +16,5 @@ struct corner{
 };
 
 struct corner corner(int, struct vector, double, double, double, double);
-struct vector* cornerCollision(struct corner, struct ball);
+int cornerCollision(struct corner, struct ball, struct vector*);
 #endif

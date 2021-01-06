@@ -82,7 +82,7 @@ void Timer(int value){
 //ステージの初期化
 void Init(){
 	initField(&field, WIDTH, HEIGHT);
-	initBall(&ball, BALL_R, vector(140,200));
+	initBall(&ball, BALL_R, vector(139.995,200));
 }
 
 //時間経過
@@ -90,11 +90,11 @@ void Update(){
 	//時間経過
 	changeVelocity(&ball, FRAME);
 	changePosition(&ball, FRAME);
-	struct vector* temp = cornerCollision(field.circle[0], ball);
-	if(temp != NULL){
-		//printf("x:%lf,y:%lf\n", ball.p.x, ball.p.y);
-		//printf("x:%lfy:%lf\n", temp->x, temp->y);
-		cornerReflection(&ball, field.circle[0], *temp);
+	struct vector temp;
+	if(cornerCollision(field.circle[0], ball, &temp)){
+	
+		printf("x:%lfy:%lf\n", temp.x, temp.y);
+		cornerReflection(&ball, field.circle[0], temp);
 		//垂直抗力によって力ゼロ
 		ball.a = zero;	
 	}else{
