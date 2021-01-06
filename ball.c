@@ -105,6 +105,7 @@ void cornerReflection(struct ball* ball, struct corner corner, struct vector p){
     //法線ベクトル
     struct vector normal;
 
+    printf("p:%lf,%lf\n",p.x, p.y);
     if (fabs(pow(p.x - start.x, 2) + pow(p.y - start.y, 2) - ball->r * ball->r) <= DBL_EPSILON * (fmax( fmax(1, ball->r * ball->r), pow(p.x - start.x, 2) + pow(p.y - start.y, 2)))){
         //始点部の円弧
         l = vector(p.y - start.y, start.x - p.x);
@@ -117,6 +118,7 @@ void cornerReflection(struct ball* ball, struct corner corner, struct vector p){
         struct vector r = unit(add(f, mult(normal, 2 * inner(inverse(f), normal))));
 
         ball -> v = mult(r, mag(ball -> v) * corner.e);
+        printf("start");
         printf("v:%lf,%lf\n", ball -> v.x, ball -> v.y);
         if(isZero(ball->v))
             ball -> v = zero;
@@ -136,17 +138,16 @@ void cornerReflection(struct ball* ball, struct corner corner, struct vector p){
         struct vector r = unit(add(f, mult(normal, 2 * inner(inverse(f), normal))));
 
         ball -> v = mult(r, mag(ball -> v) * corner.e);
+        printf("end");
         printf("v:%lf,%lf\n", ball -> v.x, ball -> v.y);
         if(isZero(ball->v))
             ball -> v = zero;
         //位置補正
         ball -> p.x = p.x;
         ball -> p.y = p.y;
-        printf("p:%lf,%lf\n", ball -> p.x, ball -> p.y);
         return;
     }else{
         //外側か内側
-        printf("asdf\n");
         l = vector(p.y - corner.center.y, corner.center.x - p.x);
         normal = normalP(l);
         //進行ベクトル成す角が鈍角ならもう一方
@@ -157,6 +158,7 @@ void cornerReflection(struct ball* ball, struct corner corner, struct vector p){
         struct vector r = unit(add(f, mult(normal, 2 * inner(inverse(f), normal))));
 
         ball -> v = mult(r, mag(ball -> v) * corner.e);
+        printf("inout");
         printf("v:%lf,%lf\n", ball -> v.x, ball -> v.y);
         if(isZero(ball->v))
             ball -> v = zero;
