@@ -1,10 +1,10 @@
 TARGET = app.exe
 
-SRCS = main.c ball.c field.c flipper.c line.c shape.c vector.c corner.c
+SRCS = main.c ball.c field.c line.c shape.c vector.c block.c
 
 OBJS = ${SRCS:.c=.o}
 
-HEADERS = line.h shape.h vector.h corner.h ball.h field.h flipper.h
+HEADERS = line.h shape.h vector.h ball.h field.h block.h
 
 CC = gcc
 CCFLAGS = -Wall -I/usr/include/opengl

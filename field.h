@@ -1,14 +1,16 @@
-#ifndef FIELD
-#define FIELD
-#define WALL 1
-#define C 1
+#ifndef FIELD_H
+#define FIELD_H
+#define WALL 4
+#define BLOCK 1
 #include "line.h"
 #include "vector.h"
+#include "block.h"
+struct block;
 struct field{
     double width;
     double height;
     struct line wall[WALL];
-    struct corner circle[C];
+    struct block blocks[BLOCK];
 };
 
 void initField(struct field*, double, double);

@@ -1,11 +1,11 @@
 #include "line.h"
-struct line line(int exist, struct vector start, struct vector end, double e){
-    struct line temp = {exist, start, end, e};
+struct line line(struct vector start, struct vector end, double e){
+    struct line temp = {start, end, e};
     return temp;
 }
 
 //衝突したかどうか交点を返す
-struct vector* lineCollision(struct line line, struct ball ball){
+int lineCollision(struct line line, struct ball ball, struct vector* temp){
     //lineベクトル
     struct vector l = sub(line.end, line.start);
 
@@ -18,32 +18,28 @@ struct vector* lineCollision(struct line line, struct ball ball){
     struct vector b = sub(ball.prevP, wallStart);
     struct vector movement = sub(ball.p, ball.prevP);
 
-    struct vector* val;
 
     //線分端の円弧部の当たり判定
-    //始点の円弧
-    struct corner s = corner(1, line.start, ball.r, angle(normalP(l)), angle(normalN(l)), 1.0);
-    //終点の円弧
-    struct corner e = corner(1, line.end, ball.r, angle(normalN(l)), angle(normalN(l)), 1.0);
 
     //移動ベクトルが円弧範囲内にある場合
-    if(angle2(normalP(l), sub(ball.p, s.center)) <= M_PI && angle2(normalP(l), sub(ball.prevP, s.center)) <= M_PI ){
-        if(mag(sub(ball.p, s.center)) <= s.r && mag(sub(ball.prevP, s.center)) <= s.r){
-            return NULL;
+    if(angle2(normalP(l), sub(ball.p, line.start)) <= M_PI && angle2(normalP(l), sub(ball.prevP, line.start)) <= M_PI ){
+        if(mag(sub(ball.p, line.start)) <= ball.r && mag(sub(ball.prevP, line.start)) <= ball.r){
+            temp = NULL;
+            return 0;
         }
     }
-    if(angle2(normalN(l), sub(ball.p, e.center)) <= M_PI && angle2(normalN(l), sub(ball.prevP, e.center)) <= M_PI ){
-        if(mag(sub(ball.p, e.center)) <= e.r && mag(sub(ball.prevP, e.center)) <= e.r){
-            return NULL;
+    if(angle2(normalN(l), sub(ball.p, line.end)) <= M_PI && angle2(normalN(l), sub(ball.prevP, line.end)) <= M_PI ){
+        if(mag(sub(ball.p, line.end)) <= ball.r && mag(sub(ball.prevP, line.end)) <= ball.r){
+            temp = NULL;
+            return 0;
         }
     }
 
     if(outer(l, a) * outer(l, b) < 0 && outer(movement, sub(wallStart, ball.p)) * outer(movement, sub(wallEnd, ball.p)) < 0){
-        struct vector temp;
         double alpha = (wallEnd.x - wallStart.x) * (ball.p.y - ball.prevP.y) - (ball.p.x - ball.prevP.x) * (wallEnd.y - wallStart.y);
         double beta = ((ball.p.y - ball.prevP.y) * (ball.p.x - wallStart.x) + (ball.prevP.x - ball.p.x) * (ball.p.y - wallStart.y)) / alpha;
-        temp = add(wallStart, mult(l, beta));
-        return val = &temp;
+        *temp = add(wallStart, mult(l, beta));
+        return 1;
     }
     //もう一方
     n = mult(normalN(l), ball.r);
@@ -54,76 +50,76 @@ struct vector* lineCollision(struct line line, struct ball ball){
     b = sub(ball.prevP, wallStart);
     movement = sub(ball.p, ball.prevP);
     if(outer(l, a) * outer(l, b) < 0 && outer(movement, sub(wallStart, ball.p)) * outer(movement, sub(wallEnd, ball.p)) < 0){
-        struct vector temp;
         double alpha = (wallEnd.x - wallStart.x) * (ball.p.y - ball.prevP.y) - (ball.p.x - ball.prevP.x) * (wallEnd.y - wallStart.y);
         double beta = ((ball.p.y - ball.prevP.y) * (ball.p.x - wallStart.x) + (ball.prevP.x - ball.p.x) * (ball.p.y - wallStart.y)) / alpha;
-        temp = add(wallStart, mult(l, beta));
-        return val = &temp;
+        *temp = add(wallStart, mult(l, beta));
+        return 1;
     } 
 
     //接線と交差しているか始点側
-    struct vector normal = mult(normalization(ball.p, ball.prevP, s.center), ball.r);
-    struct vector p = add(s.center, normal);
+    struct vector normal = mult(normalization(ball.p, ball.prevP, line.start), ball.r);
+    struct vector p = add(line.start, normal);
     
-    a = sub(ball.p, s.center);
-    b = sub(ball.prevP, s.center);
+    a = sub(ball.p, line.start);
+    b = sub(ball.prevP, line.start);
     //交差しているか
-    if(outer(normal, a) * outer(normal, b) < 0 && outer(movement, sub(s.center, ball.prevP)) * outer(movement, sub(p, ball.prevP)) < 0){
+    if(outer(normal, a) * outer(normal, b) < 0 && outer(movement, sub(line.start, ball.prevP)) * outer(movement, sub(p, ball.prevP)) < 0){
         //円弧の角度の範囲内に移動ベクトルの片方でも入っているか
-        if(angle2(normalP(l), sub(ball.p, s.center)) <= M_PI || angle2(normalP(l), sub(ball.prevP, s.center)) <= M_PI ){
+        if(angle2(normalP(l), sub(ball.p, line.start)) <= M_PI || angle2(normalP(l), sub(ball.prevP, line.start)) <= M_PI ){
             double a, b, c;
             equation(ball.prevP, ball.p, &a, &b, &c);
-            struct vector ch = mult(unit(normal), dist(s.center, a, b, c));
-            struct vector ha = mult(unit(inverse(movement)), sqrt(s.r * s.r - mag(ch) * mag(ch)));
-            struct vector temp = add(s.center, (add(ch, ha)));
-            return val = &temp;
+            struct vector ch = mult(unit(normal), dist(line.start, a, b, c));
+            struct vector ha = mult(unit(inverse(movement)), sqrt(ball.r * ball.r - mag(ch) * mag(ch)));
+            *temp = add(line.start, (add(ch, ha)));
+            return 1;
         }
     }
 
     //現在位置が領域内にあるか
-    if(angle2(normalP(l), sub(ball.p, s.center)) <= M_PI){
-        if(mag(sub(ball.p, s.center)) <= s.r && mag(sub(ball.prevP, s.center)) > s.r){
+    if(angle2(normalP(l), sub(ball.p, line.start)) <= M_PI){
+        if(mag(sub(ball.p, line.start)) <= ball.r && mag(sub(ball.prevP, line.start)) > ball.r){
             double a, b, c;
             equation(ball.prevP, ball.p, &a, &b, &c);
-            struct vector ch = mult(unit(normal), dist(s.center, a, b, c));
-            struct vector ha = mult(unit(inverse(movement)), sqrt(s.r * s.r - mag(ch) * mag(ch)));
-            struct vector temp = add(s.center, (add(ch, ha)));
-            return val = &temp;
+            struct vector ch = mult(unit(normal), dist(line.start, a, b, c));
+            struct vector ha = mult(unit(inverse(movement)), sqrt(ball.r * ball.r - mag(ch) * mag(ch)));
+            *temp = add(line.start, (add(ch, ha)));
+            return 1;
         }
     }
 
 
     //接線と交差しているか終点側
-    normal = mult(normalization(ball.p, ball.prevP, e.center), ball.r);
-    p = add(e.center, normal);
+    normal = mult(normalization(ball.p, ball.prevP, line.end), ball.r);
+    p = add(line.end, normal);
     
-    a = sub(ball.p, e.center);
-    b = sub(ball.prevP, e.center);
+    a = sub(ball.p, line.end);
+    b = sub(ball.prevP, line.end);
     //交差しているか
-    if(outer(normal, a) * outer(normal, b) < 0 && outer(movement, sub(e.center, ball.prevP)) * outer(movement, sub(p, ball.prevP)) < 0){
+    if(outer(normal, a) * outer(normal, b) < 0 && outer(movement, sub(line.end, ball.prevP)) * outer(movement, sub(p, ball.prevP)) < 0){
         //円弧の角度の範囲内に移動ベクトルの片方でも入っているか
-        if(angle2(normalN(l), sub(ball.p, e.center)) <= M_PI || angle2(normalN(l), sub(ball.prevP, e.center)) <= M_PI ){
+        if(angle2(normalN(l), sub(ball.p, line.end)) <= M_PI || angle2(normalN(l), sub(ball.prevP, line.end)) <= M_PI ){
             double a, b, c;
             equation(ball.prevP, ball.p, &a, &b, &c);
-            struct vector ch = mult(unit(normal), dist(e.center, a, b, c));
-            struct vector ha = mult(unit(inverse(movement)), sqrt(e.r * e.r - mag(ch) * mag(ch)));
-            struct vector temp = add(e.center, (add(ch, ha)));
-            return val = &temp;
+            struct vector ch = mult(unit(normal), dist(line.end, a, b, c));
+            struct vector ha = mult(unit(inverse(movement)), sqrt(ball.r * ball.r - mag(ch) * mag(ch)));
+            *temp = add(line.end, (add(ch, ha)));
+            return 1;
         }
     }
 
     //現在位置が領域内にあるか
-    if(angle2(normalN(l), sub(ball.p, e.center)) <= M_PI){
-        if(mag(sub(ball.p, e.center)) <= s.r && mag(sub(ball.prevP, e.center)) > s.r){
+    if(angle2(normalN(l), sub(ball.p, line.end)) <= M_PI){
+        if(mag(sub(ball.p, line.end)) <= ball.r && mag(sub(ball.prevP, line.end)) > ball.r){
             double a, b, c;
             equation(ball.prevP, ball.p, &a, &b, &c);
-            struct vector ch = mult(unit(normal), dist(e.center, a, b, c));
-            struct vector ha = mult(unit(inverse(movement)), sqrt(e.r * e.r - mag(ch) * mag(ch)));
-            struct vector temp = add(e.center, (add(ch, ha)));
-            return val = &temp;
+            struct vector ch = mult(unit(normal), dist(line.end, a, b, c));
+            struct vector ha = mult(unit(inverse(movement)), sqrt(ball.r * ball.r - mag(ch) * mag(ch)));
+            *temp = add(line.end, (add(ch, ha)));
+            return 1;
         }
     }
     
-    return NULL;
+    temp = NULL;
+    return 0;
 
 }
