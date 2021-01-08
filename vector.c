@@ -95,10 +95,9 @@ struct vector normalization(struct vector a, struct vector b, struct vector c){
     struct vector l = sub(b, a);
     struct vector normal = normalP(l);
     //成す角がともに鋭角なら
-    if(angle2(normal, sub(a, c)) <= M_PI / 2 && angle2(normal, sub(b,c)) <= M_PI / 2)
-        return normal;
-
-    normal = normalN(l);
+    if(angle2(normal, sub(a, c)) > M_PI / 2 && angle2(normal, sub(b,c)) > M_PI / 2)
+        normal = normalN(l);
+        
     return normal;
 }   
 

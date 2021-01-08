@@ -1,16 +1,35 @@
 #include "paddle.h"
 void initPaddle(struct paddle* paddle, struct vector p, double w, double e){
     paddle->p = p;
-    paddle->v = zero;
+    paddle->prevP = p;
     paddle->e = e;
     paddle->width = w;
 
-    struct vector a = add(center, rotate(vector(w / 2, h / 2), angle));
-    struct vector b = add(center, rotate(vector(-w / 2, h / 2), angle));
-    struct vector c = add(center, rotate(vector(-w / 2, -h / 2), angle));
-    struct vector d = add(center, rotate(vector(w / 2, -h / 2), angle));
-    temp.side[0] = line(a, b, e);
-    temp.side[1] = line(b, c, e);
-    temp.side[2] = line(c, d, e);
-    temp.side[3] = line(d, a, e);
+    struct vector a = add(p, vector(w / 2, H / 2));
+    struct vector b = add(p, vector(-w / 2, H / 2));
+    paddle->side = line(a, b, e);
+}
+
+
+void paddleChangePosition(struct paddle* paddle, struct vector p, double width){
+    paddle->prevP.x = paddle->p.x;
+    paddle->p.x = p.x;
+
+    if(p.x + paddle->width / 2 > width)
+        paddle->p.x = width - paddle->width / 2;
+    
+    if(p.x - paddle->width / 2 < 0)
+        paddle->p.x = paddle->width / 2;
+    
+    struct vector a = add(paddle->p, vector( paddle->width / 2, H));
+    struct vector b = add(paddle->p, vector(-paddle->width / 2, H));
+    paddle->side = line(a, b, paddle->e);
+}
+
+void paddleCollision(struct paddle paddle, struct ball* ball){
+    int i;
+    struct vector p;
+    if(lineCollision(paddle.side,*ball, &p)){
+        lineReflection(ball, paddle.side, p);
+    }
 }

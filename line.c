@@ -57,7 +57,9 @@ int lineCollision(struct line line, struct ball ball, struct vector* temp){
     } 
 
     //接線と交差しているか始点側
-    struct vector normal = mult(normalization(ball.p, ball.prevP, line.start), ball.r);
+    struct vector normal = normalP(movement);
+    if(angle2(normal, sub(ball.p, line.end)) > M_PI / 2 && angle2(normal, sub(ball.prevP, line.end)) > M_PI / 2)
+    normal = normalN(movement);
     struct vector p = add(line.start, normal);
     
     a = sub(ball.p, line.start);
@@ -89,7 +91,10 @@ int lineCollision(struct line line, struct ball ball, struct vector* temp){
 
 
     //接線と交差しているか終点側
-    normal = mult(normalization(ball.p, ball.prevP, line.end), ball.r);
+    normal = normalP(movement);
+    if(angle2(normal, sub(ball.p, line.end)) > M_PI / 2 && angle2(normal, sub(ball.prevP, line.end)) > M_PI / 2)
+        normal = normalN(movement);
+    
     p = add(line.end, normal);
     
     a = sub(ball.p, line.end);
