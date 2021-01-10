@@ -35,3 +35,29 @@ void DrawEllipse(struct vector center, int w_r, int h_r, GLenum mode,double sthe
     }
     glEnd();    
 }
+
+void putSprite(GLuint image, struct vector p, double width, double height, double angle){
+    struct vector a = add(p, rotate(vector( width / 2,  height / 2), -angle));
+    struct vector b = add(p, rotate(vector(-width / 2,  height / 2), -angle));
+    struct vector c = add(p, rotate(vector(-width / 2, -height / 2), -angle));
+    struct vector d = add(p, rotate(vector( width / 2, -height / 2), -angle));
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, image);
+    glColor4ub(255, 255, 255, 255);
+    glBegin(GL_QUADS);
+
+    glTexCoord2d(0, 0);
+    glVertex2d(c.x, c.y);
+
+    glTexCoord2d(0, 1);
+    glVertex2d(b.x, b.y);
+
+    glTexCoord2d(1, 1);
+    glVertex2d(a.x, a.y);
+
+    glTexCoord2d(1, 0);
+    glVertex2d(d.x, d.y);
+
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+}

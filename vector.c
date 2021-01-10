@@ -24,6 +24,8 @@ struct vector mult(struct vector a, double b){
 }
 
 struct vector divi(struct vector a, double b){
+    if(b < DBL_EPSILON)
+        return a;
     struct vector temp = {a.x / b, a.y / b};
     return temp;
 }

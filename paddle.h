@@ -5,6 +5,7 @@
 #define H 10
 struct paddle{
     struct vector p;
+    double v;
     struct vector prevP;
     double e;
     double width;
@@ -12,6 +13,6 @@ struct paddle{
 };
 
 void initPaddle(struct paddle*, struct vector, double, double);
-void paddleChangePosition(struct paddle*, struct vector, double);
+void paddleChangePosition(struct paddle*, struct vector, double, double);
 void paddleCollision(struct paddle, struct ball*);
 #endif

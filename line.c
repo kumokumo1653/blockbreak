@@ -36,6 +36,11 @@ int lineCollision(struct line line, struct ball ball, struct vector* temp){
     }
 
     if(outer(l, a) * outer(l, b) < 0 && outer(movement, sub(wallStart, ball.p)) * outer(movement, sub(wallEnd, ball.p)) < 0){
+        //内側からだったら当たらない
+        if(angle2(n, movement) < M_PI / 2 || angle2(movement, n) < M_PI / 2){
+            temp = NULL;
+            return 0;
+        }
         double alpha = (wallEnd.x - wallStart.x) * (ball.p.y - ball.prevP.y) - (ball.p.x - ball.prevP.x) * (wallEnd.y - wallStart.y);
         double beta = ((ball.p.y - ball.prevP.y) * (ball.p.x - wallStart.x) + (ball.prevP.x - ball.p.x) * (ball.p.y - wallStart.y)) / alpha;
         *temp = add(wallStart, mult(l, beta));
@@ -50,6 +55,11 @@ int lineCollision(struct line line, struct ball ball, struct vector* temp){
     b = sub(ball.prevP, wallStart);
     movement = sub(ball.p, ball.prevP);
     if(outer(l, a) * outer(l, b) < 0 && outer(movement, sub(wallStart, ball.p)) * outer(movement, sub(wallEnd, ball.p)) < 0){
+        //内側からだったら当たらない
+        if(angle2(n, movement) < M_PI / 2 || angle2(movement, n) < M_PI / 2){
+            temp = NULL;
+            return 0;
+        }
         double alpha = (wallEnd.x - wallStart.x) * (ball.p.y - ball.prevP.y) - (ball.p.x - ball.prevP.x) * (wallEnd.y - wallStart.y);
         double beta = ((ball.p.y - ball.prevP.y) * (ball.p.x - wallStart.x) + (ball.prevP.x - ball.p.x) * (ball.p.y - wallStart.y)) / alpha;
         *temp = add(wallStart, mult(l, beta));
