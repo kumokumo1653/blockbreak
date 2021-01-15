@@ -43,8 +43,6 @@ int blockCollision(struct block* block, struct ball* ball, int* score){
             }
         }
         if(flag){
-            //printf("%lf,%lf\n", ball->prevP.x, ball->prevP.y);
-            //printf("%lf,%lf\n", ball->p.x, ball->p.y);
             lineReflection(ball, block->side[index], temp);
             //ブロック破壊の処理
             if(block->isBreak){
@@ -53,9 +51,9 @@ int blockCollision(struct block* block, struct ball* ball, int* score){
                     //破壊
                     block->isExist = 0;
                     *score += block->score;
-                    return 1;
                 }
             }
+            return 1;
         }
         return 0;
     }else{
