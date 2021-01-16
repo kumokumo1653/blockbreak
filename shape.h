@@ -8,5 +8,4 @@
 void DrawCircle(struct vector, int, GLenum, double, double, float, GLubyte []);
 void DrawEllipse(struct vector, int, int, GLenum ,double, double, float ,GLubyte []);
 
-void putSprite(GLuint, struct vector , double, double, double);
 #endif

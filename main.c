@@ -18,7 +18,6 @@
 #define WIDTH 900
 #define HEIGHT 600
 #define BLOCK_SIZE 30
-#define BALL 3
 #define BALL_R 10
 #define BALL_S 300
 #define PADDLE_W 75
@@ -37,6 +36,7 @@ void Update();
 void Mouse(int, int, int, int);
 void PossiveMotion(int, int);
 void putString(struct vector, char[]);
+void putSprite(GLuint, struct vector , double, double, double);
 struct vector convertCoordinate(struct vector);
 struct vector inverseConvertCoordinate(struct vector);
 
@@ -365,6 +365,31 @@ void putString(struct vector first, char str[]){
 	}
 }
 
+void putSprite(GLuint image, struct vector p, double width, double height, double angle){
+    struct vector a = add(p, rotate(vector( width / 2,  height / 2), -angle));
+    struct vector b = add(p, rotate(vector(-width / 2,  height / 2), -angle));
+    struct vector c = add(p, rotate(vector(-width / 2, -height / 2), -angle));
+    struct vector d = add(p, rotate(vector( width / 2, -height / 2), -angle));
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, image);
+    glColor4ub(255, 255, 255, 255);
+    glBegin(GL_QUADS);
+
+    glTexCoord2d(0, 0);
+    glVertex2d(c.x, c.y);
+
+    glTexCoord2d(0, 1);
+    glVertex2d(b.x, b.y);
+
+    glTexCoord2d(1, 1);
+    glVertex2d(a.x, a.y);
+
+    glTexCoord2d(1, 0);
+    glVertex2d(d.x, d.y);
+
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+}
 //表示用座標に変換
 struct vector convertCoordinate(struct vector a ){
 	struct vector temp = vector(a.x + BLOCK_SIZE, HEIGHT - a.y + BLOCK_SIZE * 2);
