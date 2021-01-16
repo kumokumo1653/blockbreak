@@ -108,7 +108,7 @@ void Display(void){
 	glClear(GL_COLOR_BUFFER_BIT);
 		if(status == game){
 		if(!firingFlag){
-			putSprite(arrowImage, convertCoordinate(vector(ball.p.x, ball.p.y + 20)), 30, 30, firingAngle - M_PI / 2);
+			putSprite(arrowImage, convertCoordinate(vector(ball.p.x, ball.p.y + 20)), 30, 30, M_PI / 2 - firingAngle);
 		}
 		for(i = 0; i < BLOCK; i++){
 			if(field.blocks[i].isExist){
@@ -366,10 +366,10 @@ void putString(struct vector first, char str[]){
 }
 
 void putSprite(GLuint image, struct vector p, double width, double height, double angle){
-    struct vector a = add(p, rotate(vector( width / 2,  height / 2), -angle));
-    struct vector b = add(p, rotate(vector(-width / 2,  height / 2), -angle));
-    struct vector c = add(p, rotate(vector(-width / 2, -height / 2), -angle));
-    struct vector d = add(p, rotate(vector( width / 2, -height / 2), -angle));
+    struct vector a = add(p, rotate(vector( width / 2,  height / 2), angle));
+    struct vector b = add(p, rotate(vector(-width / 2,  height / 2), angle));
+    struct vector c = add(p, rotate(vector(-width / 2, -height / 2), angle));
+    struct vector d = add(p, rotate(vector( width / 2, -height / 2), angle));
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, image);
     glColor4ub(255, 255, 255, 255);
