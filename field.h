@@ -2,7 +2,6 @@
 #define FIELD_H
 #define WALL 4
 #define BLOCK 15
-#define ITEM 4
 #define EFFECT 20
 #include <GL/glut.h>
 #include <GL/glpng.h>

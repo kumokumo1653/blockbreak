@@ -7,7 +7,8 @@ enum type{
     ballSpeedUp,
     paddleSpeedDown,
     paddleShort,
-    paddleLong
+    paddleLong,
+    ITEM
 };
 struct item{
     int isExist;
