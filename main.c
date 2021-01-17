@@ -34,7 +34,7 @@ void itemTimer(int);
 void Init();
 void Update();
 void Mouse(int, int, int, int);
-void PossiveMotion(int, int);
+void PassiveMotion(int, int);
 void putString(struct vector, char[]);
 void putSprite(GLuint, struct vector , double, double, double);
 struct vector convertCoordinate(struct vector);
@@ -72,7 +72,7 @@ int main(int argc, char** argv){
     glutReshapeFunc(Reshape);
 	glutTimerFunc(FRAME * 1000, Timer, 0);
 	glutMouseFunc(Mouse);
-	glutPassiveMotionFunc(PossiveMotion);
+	glutPassiveMotionFunc(PassiveMotion);
     glutInitDisplayMode(GLUT_RGBA | GLUT_ALPHA);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA , GL_ONE_MINUS_SRC_ALPHA);
@@ -99,6 +99,7 @@ int main(int argc, char** argv){
 
 	srand((unsigned)time(NULL));
 
+	pointer = zero;
     glutMainLoop();
     return 0;
 }
@@ -181,7 +182,6 @@ void Timer(int value){
 
 //ステージの初期化
 void Init(){
-	pointer = zero;
 	score = 0;
 	firingFlag = 0;
 	life = LIFE;
@@ -215,7 +215,7 @@ void Update(){
 							//ボールの初期化
 							firingFlag = 0;
 							initBall(&ball, BALL_R, vector(pointer.x, 50 + H / 2 +  BALL_R));
-							initPaddle(&paddle, vector(pointer.x, 50), 50, 1.0);
+							initPaddle(&paddle, vector(pointer.x, 50), PADDLE_W, 1.0);
 							paddle.v = 500;
 						}
 					}else{
@@ -319,7 +319,7 @@ void Mouse(int button, int sts, int x, int y){
 	}
 }
 
-void PossiveMotion(int x, int y){
+void PassiveMotion(int x, int y){
 	pointer = inverseConvertCoordinate(vector(x, y));
 }
 
@@ -353,7 +353,6 @@ void itemTimer(int v){
 		default:
 			break;
 		}
-		ball.v = mult(unit(ball.v), BALL_S);
 	}
 }
 void putString(struct vector first, char str[]){

@@ -25,7 +25,7 @@ struct block block(int exist, int isBreak, int times, struct vector center, doub
     return temp;
 }
 
-//あたったどうかを返す
+//ブロックがはかいされたかどうかを返す
 int blockCollision(struct block* block, struct ball* ball, int* score){
     int i;
     int index;
@@ -51,9 +51,9 @@ int blockCollision(struct block* block, struct ball* ball, int* score){
                     //破壊
                     block->isExist = 0;
                     *score += block->score;
+                    return 1;
                 }
             }
-            return 1;
         }
         return 0;
     }else{
