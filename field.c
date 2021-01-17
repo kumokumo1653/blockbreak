@@ -11,10 +11,11 @@ void initField(struct field* temp, double w, double h, GLuint images[], GLuint i
     int i,j;
     int width = 60;
     int height = 40;
-    for(i = 0; i < 1;i++){
+    int maxrow = BLOCK / (w / width);
+    for(i = 0; i < maxrow;i++){
         struct vector p = vector(width / 2, h - height / 2 - i * height);
         for(j = 0; j < w / width;j++){
-            temp -> blocks[j + i * (int)(w / width)] = block(1, 1,  1, p, width, height, 0, 1.0, (5 - i) * 100,images[i + 1]);
+            temp -> blocks[j + i * (int)(w / width)] = block(1, 1,  1, p, width, height, 0, 1.0, (maxrow - i) * 100,images[i + 1]);
             p = add(p, vector(width,0));
         }
     }

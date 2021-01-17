@@ -1,7 +1,7 @@
 #ifndef FIELD_H
 #define FIELD_H
 #define WALL 4
-#define BLOCK 15
+#define BLOCK 75
 #define EFFECT 20
 #include <GL/glut.h>
 #include <GL/glpng.h>

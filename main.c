@@ -232,7 +232,7 @@ void Update(){
 						if(!field.items[type].isExist){
 							field.items[type].isExist = 1;
 							field.items[type].p = field.blocks[i].center;
-							field.items[type].prevP = field.items[i].p;
+							field.items[type].prevP = field.items[type].p;
 							field.items[type].v = -FALL_SPEED;
 							field.items[type].r = BALL_R;
 						}
