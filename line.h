@@ -4,7 +4,6 @@
 #include <math.h>
 #include "vector.h"
 #include "ball.h"
-#include "corner.h"
 struct ball;
 struct line{
     struct vector start;

@@ -11,7 +11,6 @@
 #include "line.h"
 #include "paddle.h"
 #include "vector.h"
-#include "shape.h"
 
 #define FPS 60.0
 #define FRAME 1.0 / FPS
@@ -67,7 +66,7 @@ int replaytime = 0;
 int main(int argc, char** argv){
     glutInit(&argc, argv);
     glutInitWindowSize(WIDTH + BLOCK_SIZE * 2, HEIGHT + BLOCK_SIZE * 3);
-    glutCreateWindow("ブロック崩し");
+    glutCreateWindow("BlockBreak");
     glutDisplayFunc(Display);
     glutReshapeFunc(Reshape);
 	glutTimerFunc(FRAME * 1000, Timer, 0);
@@ -119,7 +118,7 @@ void Display(void){
 
 
 		//paddle
-		putSprite(paddleImage, convertCoordinate(paddle.p), paddle.width, H, 0);
+		putSprite(paddleImage, convertCoordinate(paddle.p), paddle.width, PADDLE_HEIGHT, 0);
 		//ball
 		putSprite(ballImage, convertCoordinate(ball.p), ball.r * 2, ball.r * 2, 0);
 		//item
@@ -188,7 +187,7 @@ void Init(){
 	gameTime = TIME;
 	glutTimerFunc(1000, gameTimer, replaytime);
 	initField(&field, WIDTH, HEIGHT, blockImage, itemImage);
-	initBall(&ball, BALL_R, vector(WIDTH / 2,50 + H / 2 +  BALL_R));
+	initBall(&ball, BALL_R, vector(WIDTH / 2,50 + PADDLE_HEIGHT / 2 +  BALL_R));
 	initPaddle(&paddle, vector(WIDTH / 2, 50), PADDLE_W, 1.0);
 	paddle.v = PADDLE_S;
 }
@@ -214,7 +213,7 @@ void Update(){
 						}else{
 							//ボールの初期化
 							firingFlag = 0;
-							initBall(&ball, BALL_R, vector(pointer.x, 50 + H / 2 +  BALL_R));
+							initBall(&ball, BALL_R, vector(pointer.x, 50 + PADDLE_HEIGHT / 2 +  BALL_R));
 							initPaddle(&paddle, vector(pointer.x, 50), PADDLE_W, 1.0);
 							paddle.v = 500;
 						}

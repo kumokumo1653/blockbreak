@@ -9,8 +9,8 @@ struct item item(enum type type, double time, GLuint image){
 }
 
 int itemCollision(struct item item, struct paddle paddle){
-    struct vector paddleStart = add(paddle.p, vector(paddle.width / 2, H / 2 + item.r));
-    struct vector paddleEnd = add(paddle.p, vector(-paddle.width / 2, H / 2 + item.r));
+    struct vector paddleStart = add(paddle.p, vector(paddle.width / 2, PADDLE_HEIGHT / 2 + item.r));
+    struct vector paddleEnd = add(paddle.p, vector(-paddle.width / 2, PADDLE_HEIGHT / 2 + item.r));
     struct vector l = sub(paddleEnd, paddleStart);
     struct vector movement = sub(item.p, item.prevP);
     //線分が交差していれば衝突

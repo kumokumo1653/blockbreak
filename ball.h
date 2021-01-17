@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include "vector.h"
 #include "line.h"
-#include "corner.h"
 
 struct line;
 struct corner;

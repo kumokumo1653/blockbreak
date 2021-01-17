@@ -6,8 +6,8 @@ void initPaddle(struct paddle* paddle, struct vector p, double w, double e){
     paddle->e = e;
     paddle->width = w;
 
-    struct vector a = add(p, vector(w / 2, H / 2));
-    struct vector b = add(p, vector(-w / 2, H / 2));
+    struct vector a = add(p, vector(w / 2, PADDLE_HEIGHT / 2));
+    struct vector b = add(p, vector(-w / 2, PADDLE_HEIGHT / 2));
     paddle->side = line(a, b, e);
 }
 
@@ -37,8 +37,8 @@ void paddleChangePosition(struct paddle* paddle, struct vector p,double time,  d
         paddle->p.x = paddle->width / 2;
         paddle->prevP.x = paddle->p.x;
     }
-    struct vector a = add(paddle->p, vector( paddle->width / 2, H / 2));
-    struct vector b = add(paddle->p, vector(-paddle->width / 2, H / 2));
+    struct vector a = add(paddle->p, vector( paddle->width / 2, PADDLE_HEIGHT / 2));
+    struct vector b = add(paddle->p, vector(-paddle->width / 2, PADDLE_HEIGHT / 2));
     paddle->side = line(a, b, paddle->e);
 }
 

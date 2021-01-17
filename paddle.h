@@ -2,7 +2,7 @@
 #define PADDLE_H
 #include "vector.h"
 #include "line.h"
-#define H 10
+#define PADDLE_HEIGHT 10
 struct paddle{
     struct vector p;
     double v;
